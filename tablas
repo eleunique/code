@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Tablas</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.css"/>
+ 
+		<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.js"></script>
+		<script type="text/javascript" src="js/datatables.bootstrap.js"></script>
+
+		<script type="text/javascript">
+
+            $(document).ready(function () {
+                $('#tblClientes').DataTable({
+                    sDom: 't', "columnDefs": [{
+                        "targets": 'no-sort',
+                        "orderable": false,
+                    }]
+                });
+
+                $('#txtBuscar1').on('keyup click', function () {
+                    $('#tblClientes').DataTable().search(
+		            $('#txtBuscar1').val()
+		        ).draw();
+                });
+
+                $("#tblNew").DataTable({
+                    sDom: 't', bInfo: false, "columnDefs": [{
+                        "targets": 'no-sort',
+                        "orderable": false,
+                    }]
+                });
+                $('#txtBuscar2').on('keyup click', function () {
+                    $('#tblNew').DataTable().search(
+		            $('#txtBuscar2').val()
+		        ).draw();
+                });
+
+			    $('#tblNew tbody tr').remove();
+			});
+
+            function agregar(fila) {
+                //quito el estilo datatable
+			    $("#tblNew").DataTable().destroy(); 
+			    $("#tblClientes").DataTable().destroy(); 
+
+			    var tr = $(fila).closest("tr"); //fila seleccionada
+                //agrego fila
+			    $("#tblNew").append($("<tr>")
+                    .append($("<td>").text(tr.find("td").eq(0).text()))
+                    .append('<td class="text-center" style="cursor:pointer; width:10%;" onclick="quitar(this)">' +
+                        '<span style="color:red" class="glyphicon glyphicon-trash"></span></td>')
+                    );
+
+			    tr.remove();
+			    //var num = $("#tblClientes tbody tr").length;
+
+                //vuelvo a poner estilo Datatable
+			    $("#tblNew").DataTable({
+			        sDom: 't', bInfo: false, "columnDefs": [{
+			            "targets": 'no-sort',
+			            "orderable": false,
+			        }]
+			    });
+			    $("#tblClientes").DataTable({
+			        sDom: 't', bInfo: false, "columnDefs": [{
+			            "targets": 'no-sort',
+			            "orderable": false,
+			        }]
+			    });
+			}
+
+			function quitar(fila) {
+			    //quito el estilo datatable
+			    $("#tblNew").DataTable().destroy();
+			    $("#tblClientes").DataTable().destroy();
+
+			    var tr = $(fila).closest("tr"); //fila seleccionada
+			    //agrego fila
+			    $("#tblClientes").append($("<tr>")
+                    .append($("<td>").text(tr.find("td").eq(0).text()))
+                    .append('<td class="text-center" style="cursor:pointer; width:10%;" onclick="agregar(this)">' +
+                        '<span style="color:green" class="glyphicon glyphicon-plus"></span></td>')
+                    );
+
+			    tr.remove();
+
+			    //vuelvo a poner estilo Datatable
+			    $("#tblNew").DataTable({
+			        sDom: 't', bInfo: false, "columnDefs": [{
+			            "targets": 'no-sort',
+			            "orderable": false,
+			        }]
+			    });
+			    $("#tblClientes").DataTable({
+			        sDom: 't', bInfo: false, "columnDefs": [{
+			            "targets": 'no-sort',
+			            "orderable": false,
+			        }]
+			    });
+			}
+
+		</script>
+	</head>
+    <body>
+		<div class="row">
+            <div class="col-md-5 table-responsive" style="max-height:500px; overflow-y:auto">
+                <h3>Todos los Clientes</h3> 
+                    
+                <table class="table table-bordered table-hover table-condensed" id="tblClientes">
+                    <thead>
+                        <tr style="background-color:silver; color:white;">
+                            <th>
+                                <div class="form-inline">
+                                	CLIENTES <input id="txtBuscar1" type="text" placeholder="Buscar" class="form-control"  style="width: 200px" />
+                                </div> 
+                            </th>
+                            <th style="text-align:center; width:10%; vertical-align: middle;" class="no-sort">AGREGAR</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>JUANITA MENDOZA</td>
+                            <td class="text-center" style="cursor:pointer; width:80px;" onclick="agregar(this)">
+                                <span style="color:green" class="glyphicon glyphicon-plus"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6 table-responsive" style="max-height:500px; overflow-y:auto">
+                <h3>Clientes agregados</h3>
+                <table class="table table-bordered table-hover table-condensed" id="tblNew">
+                    <thead>
+                        <tr style="background-color:darkseagreen; color:white">
+                            <th>
+                                <div class="form-inline">
+                                	CLIENTES <input id="txtBuscar2" type="text" placeholder="Buscar" class="form-control" style="width: 200px" />
+                                </div> 
+                            </th>
+                            <th style="text-align:center; width:10%; vertical-align: middle;" class="no-sort">QUITAR</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+                
+        </div>
+    </body>
+</html>
